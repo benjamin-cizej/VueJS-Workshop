@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+    label {
+        font-weight: bold;
+        padding-bottom: 5px;
+    }
+
+    .container {
+        min-height: 40px;
+        margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <label>Component without props</label>
+    <my-component></my-component>
+  </div>
+  <div class="container">
+    <label>Component with array as props definition</label>
+    <my-second-component message="Hello from props"></my-second-component>
+  </div>
+  <div class="container">
+    <label>Component will use default prop</label>
+    <my-third-component message="Third component message"></my-third-component>
+  </div>
+  <div class="container">
+    <label>Component will use app data as prop</label>
+    <my-third-component :message="appMessage"></my-third-component>
+  </div>
+  <div class="container">
+    <label>Component with invalid message type prop</label>
+    <my-third-component message="Third component invalid message type" message-type="info"></my-third-component>
+  </div>
+  <div class="container">
+    <label>Component trying to mutate props</label>
+    <my-fourth-component :message="appMessage"></my-fourth-component>
+  </div>
+  <div class="container">
+    <label>Component with prop as initial value</label>
+    <my-fifth-component :message="appMessage"></my-fifth-component>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    template: `
+      <div>
+        {{ message }}
+      </div>
+    `,
+    data() {
+      return {
+        message: 'Hello from my component!',
+      }
+    }
+  })
+
+  Vue.component('my-second-component', {
+    template: `
+      <div>
+        {{ message }}
+      </div>
+    `,
+    props: ['message']
+  })
+
+  Vue.component('my-third-component', {
+    template: `
+      <div :class="messageType">
+        {{ message }}
+      </div>
+    `,
+    props: {
+      message: {
+        type: String,
+        required: true,
+      },
+      messageType: {
+        type: String,
+        default: 'success',
+        validator: function (value) {
+          return ['success', 'warning', 'danger'].includes(value)
+        },
+      }
+    }
+  })
+
+  Vue.component('my-fourth-component', {
+    template: `
+      <div>
+        <div>
+          {{ message }}
+        </div>
+        <button type="button" @click="onChangeText">Change text</button>
+      </div>
+    `,
+    props: {
+      message: {
+        type: String,
+        required: true,
+      },
+    },
+    methods: {
+      onChangeText() {
+        this.message = 'Changed text'
+      }
+    }
+  })
+
+  Vue.component('my-fifth-component', {
+    template: `
+      <div>
+        <div>
+          {{ messageInternal }}
+        </div>
+        <button type="button" @click="onChangeText">Change text</button>
+      </div>
+    `,
+    props: {
+      message: {
+        type: String,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        messageInternal: this.message,
+      }
+    },
+    methods: {
+      onChangeText() {
+        this.messageInternal = 'Changed text'
+      }
+    }
+  })
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      appMessage: 'Hello from app!',
+    }
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+      .container {
+          min-height: 40px;
+          margin-bottom: 10px;
+      }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <my-component :amount="amount"></my-component>
+  </div>
+  <div class="container">
+    <my-second-component :amount="amount"></my-second-component>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    template: `
+      <div>
+        <input type="number" :value="amountInternal" @input="(ev) => { amountInternal = ev.currentTarget.value }">
+      </div>
+    `,
+    props: {
+      amount: {
+        type: Number,
+        required: true,
+      }
+    },
+    data() {
+      return {
+        amountInternal: this.amount,
+      }
+    }
+  })
+
+  Vue.component('my-second-component', {
+    template: `
+      <div>
+        <input type="number" v-model="amountInternal">
+      </div>
+    `,
+    props: {
+      amount: {
+        type: Number,
+        required: true,
+      }
+    },
+    data() {
+      return {
+        amountInternal: this.amount,
+      }
+    }
+  })
+
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        amount: 1000
+      }
+    }
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+    .container {
+        min-height: 80px;
+        margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <my-component ref="myComponent"></my-component>
+    <button type="button" ref="myButton">My button</button>
+  </div>
+
+  <div class="container">
+    <div>Component width: {{ componentWidth }}</div>
+    <div>Button width: {{ buttonWidth }}</div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    template: `
+      <div>
+        {{ message }}
+      </div>
+    `,
+    data() {
+      return {
+        message: 'Hello from my component!',
+      }
+    }
+  })
+
+  var app = new Vue({
+    el: '#app',
+    created() {
+      console.log(this.$refs.myComponent)
+      console.log(this.$refs.myButton)
+
+      window.addEventListener('resize', () => {
+        this.getComponentWidth()
+        this.getButtonWidth()
+      })
+    },
+    data() {
+      return {
+        componentWidth: 0,
+        buttonWidth: 0,
+      }
+    },
+    methods: {
+      getComponentWidth() {
+        this.componentWidth = this.$refs.myComponent.$el.clientWidth
+      },
+      getButtonWidth() {
+        this.buttonWidth = this.$refs.myButton.clientWidth
+      },
+    },
+    mounted() {
+      console.log(this.$refs.myComponent)
+      console.log(this.$refs.myButton)
+      this.getComponentWidth()
+      this.getButtonWidth()
+    }
+  })
+</script>
+</body>
+</html>

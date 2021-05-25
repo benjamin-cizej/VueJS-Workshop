@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Workshop</title>
+</head>
+<body>
+<div id="app">
+  <my-input></my-input>
+  <my-text-area></my-text-area>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var mixin = {
+    data() {
+      return {
+        value: '',
+      }
+    },
+    methods: {
+      isValid() {
+        return this.value.trim() !== ''
+      }
+    },
+    created() {
+      console.log('Created hook from mixin!')
+    }
+  }
+
+  Vue.component('my-input', {
+    mixins: [mixin],
+    data() {
+      return {
+        value: '0'
+      }
+    },
+    created() {
+      console.log(this.$data)
+      console.log('Created hook from component!')
+    },
+    template: `
+      <div>
+        <input type="number" v-model="value" />
+        <button type="text" @click="handleClick">Submit</button>
+      </div>
+    `,
+    methods: {
+      handleClick(event) {
+        if (!this.isValid()) {
+          alert('Enter a number!')
+        }
+      },
+    }
+  })
+
+  Vue.component('my-text-area', {
+    mixins: [mixin],
+    data() {
+      return {
+        value: ''
+      }
+    },
+    template: `
+      <div>
+        <textarea v-model="value"></textarea>
+        <button type="text" @click="handleClick">Submit</button>
+      </div>
+    `,
+    methods: {
+      handleClick(event) {
+        if (!this.isValid()) {
+          alert('Enter a text!')
+        }
+      },
+    }
+  })
+
+  var app = new Vue({
+    el: '#app',
+  })
+</script>
+</body>
+</html>

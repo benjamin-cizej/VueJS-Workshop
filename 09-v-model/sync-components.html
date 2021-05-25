@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+      .container {
+          min-height: 40px;
+          margin-bottom: 10px;
+      }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <my-component v-model="amount"></my-component>
+  </div>
+  <div class="container">
+    <my-second-component v-model="amount"></my-second-component>
+  </div>
+  <div class="container">
+    <my-third-component v-model="anotherAmount"></my-third-component>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    template: `
+      <div>
+        <input type="number" v-model="amountInternal">
+      </div>
+    `,
+    props: {
+      value: {
+        type: String,
+        required: true,
+      }
+    },
+    data() {
+      return {
+        amountInternal: this.value,
+      }
+    },
+    watch: {
+      amountInternal(value) {
+        this.$emit('input', value)
+      },
+      value(value) {
+        this.amountInternal = value;
+      }
+    }
+  })
+
+  Vue.component('my-second-component', {
+    template: `
+      <div>
+        <input type="number" v-model="amountInternal">
+      </div>
+    `,
+    props: {
+      value: {
+        type: String,
+        required: true,
+      }
+    },
+    data() {
+      return {
+        amountInternal: this.value,
+      }
+    },
+    watch: {
+      amountInternal(value) {
+        this.$emit('input', value)
+      },
+      value(value) {
+        this.amountInternal = value;
+      }
+    }
+  })
+
+  Vue.component('my-third-component', {
+    template: `
+      <div>
+        <input type="number" :value="amount" @input="(ev) => $emit('typing', ev.currentTarget.value)">
+      </div>
+    `,
+    model: {
+      prop: 'amount',
+      event: 'typing'
+    },
+    props: {
+      amount: {
+        type: String,
+        required: true,
+      }
+    },
+  })
+
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        amount: "1000",
+        anotherAmount: "2000"
+      }
+    }
+  })
+</script>
+</body>
+</html>

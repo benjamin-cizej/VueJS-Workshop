@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+    #app {
+        width: 100%;
+        max-width: 500px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="show-directive">
+    <button type="button" @click="displayed = !displayed">Toggle v-show</button>
+    <my-component v-show="displayed"></my-component>
+
+  </div>
+  <div class="if-directive">
+    <button type="button" @click="exists = !exists">Toggle v-if</button>
+    <my-component v-if="exists"></my-component>
+  </div>
+  <div class="if-directive-keep-alive">
+    <button type="button" @click="exists = !exists">Toggle v-if</button>
+    <keep-alive>
+      <my-component v-if="exists"></my-component>
+    </keep-alive>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    data() {
+      return {
+        value: '',
+      }
+    },
+    template: `
+      <div>
+        <p>I am shown!</p>
+        <input type="text" v-model="value">
+      </div>
+    `
+  })
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      displayed: false,
+      exists: false,
+    },
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Workshop</title>
+  <style>
+      .container {
+          min-height: 40px;
+          margin-bottom: 10px;
+      }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <my-component :message="appMessage"></my-component>
+  </div>
+  <div class="container">
+    <my-second-component :message="appMessage"></my-second-component>
+  </div>
+  <div class="container">
+    <my-third-component :message="msgObject"></my-third-component>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  Vue.component('my-component', {
+    template: `
+      <div>
+        <div>
+          {{ this.messageInternal === this.message ? 'Original message: ' + this.messageInternal : 'Modified message: ' + this.messageInternal }}
+        </div>
+        <div>
+          {{ computedMessage }}
+        </div>
+        <button type="button" @click="onChangeText">Change text</button>
+      </div>
+    `,
+    props: {
+      message: {
+        type: String,
+        required: true,
+      },
+    },
+    computed: {
+      computedMessage() {
+        console.log('Fired computation')
+
+        if (this.messageInternal === this.message) {
+          return `Original message: ${this.messageInternal}`
+        }
+
+        return `Modified message: ${this.messageInternal}`
+      }
+    },
+    data() {
+      return {
+        messageInternal: this.message,
+      }
+    },
+    methods: {
+      onChangeText() {
+        this.messageInternal = 'Changed text'
+      }
+    }
+  })
+
+  Vue.component('my-second-component', {
+    template: `
+      <div>
+        <div>
+          {{ messageInternal }}
+        </div>
+        <button type="button" @click="onChangeText">Change text</button>
+      </div>
+    `,
+    props: {
+      message: {
+        type: String,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        messageInternal: this.message,
+      }
+    },
+    watch: {
+      message(value, prevValue) {
+        console.log('Second component watcher fired')
+        console.log(prevValue)
+        this.messageInternal = value;
+      }
+    },
+    methods: {
+      onChangeText() {
+        this.messageInternal = 'Changed text'
+      }
+    }
+  })
+
+  Vue.component('my-third-component', {
+    template: `
+      <div>
+        <div>
+          {{ messageInternal }}
+        </div>
+        <button type="button" @click="onChangeText">Change text</button>
+      </div>
+    `,
+    props: {
+      message: {
+        type: Object,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        messageInternal: this.message.value,
+      }
+    },
+    watch: {
+      // Commented code will not work, uncomment to try
+      /*message(value, prevValue) {
+        console.log('Third watcher fired')
+        console.log(prevValue)
+        this.messageInternal = value.value;
+      },*/
+      message: {
+        deep: true,
+        immediate: true,
+        handler(value, prevValue) {
+          console.log('Third watcher fired')
+          console.log(prevValue)
+          this.messageInternal = value.value;
+        }
+      }
+    },
+    methods: {
+      onChangeText() {
+        this.messageInternal = 'Changed text'
+      }
+    }
+  })
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      appMessage: 'This is a message from app!',
+      msgObject: {
+        value: 'A message from object!'
+      }
+    }
+  })
+</script>
+</body>
+</html>
